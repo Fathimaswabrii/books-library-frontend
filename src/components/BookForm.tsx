@@ -75,7 +75,7 @@ export function BookForm({
         />
         <Label htmlFor="availability_status">Available</Label>
       </div>
-      <Button type="submit" disabled={isLoading}>
+      <Button type="submit" size="sm" className="w-auto" disabled={isLoading}>
         {isLoading ? 'Saving...' : submitLabel}
       </Button>
     </form>

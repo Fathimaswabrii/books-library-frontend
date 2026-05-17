@@ -1,8 +1,11 @@
 import { useState, type FormEvent } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { ArrowLeft } from 'lucide-react'
 import { createBook } from '@/api/booksApi'
 import { BookForm } from '@/components/BookForm'
 import { AppPageLayout } from '@/components/layouts/AppPageLayout'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent } from '@/components/ui/card'
 import { getApiErrorMessage } from '@/lib/apiError'
 import type { BookFormData } from '@/types/book'
 
@@ -37,14 +40,30 @@ export default function AddBookPage() {
 
   return (
     <AppPageLayout title="Add book">
-      <BookForm
-        values={form}
-        onChange={setForm}
-        onSubmit={handleSubmit}
-        error={error}
-        isLoading={isLoading}
-        submitLabel="Add book"
-      />
+      <div className="mb-4">
+        <Button
+          variant="ghost"
+          onClick={() => navigate('/books')}
+          className="flex items-center gap-2 pl-0 text-muted-foreground hover:text-foreground"
+        >
+          <ArrowLeft className="h-4 w-4" />
+          Back
+        </Button>
+      </div>
+      <div className="flex justify-center">
+        <Card className="w-full max-w-lg">
+          <CardContent className="p-6">
+            <BookForm
+              values={form}
+              onChange={setForm}
+              onSubmit={handleSubmit}
+              error={error}
+              isLoading={isLoading}
+              submitLabel="Add book"
+            />
+          </CardContent>
+        </Card>
+      </div>
     </AppPageLayout>
   )
 }
