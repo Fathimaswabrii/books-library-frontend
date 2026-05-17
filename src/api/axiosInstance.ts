@@ -1,8 +1,13 @@
 import axios from 'axios'
 
 const axiosInstance = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL,
+  baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000',
 })
+
+function isAuthRequest(url?: string): boolean {
+  if (!url) return false
+  return url.includes('/api/auth/login') || url.includes('/api/auth/register')
+}
 
 axiosInstance.interceptors.request.use((config) => {
   const token = localStorage.getItem('access')
@@ -15,7 +20,7 @@ axiosInstance.interceptors.request.use((config) => {
 axiosInstance.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response?.status === 401) {
+    if (error.response?.status === 401 && !isAuthRequest(error.config?.url)) {
       localStorage.clear()
       window.location.href = '/login'
     }

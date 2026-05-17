@@ -21,6 +21,12 @@ export default function RegisterPage() {
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
     setError('')
+
+    if (password !== password2) {
+      setError('Passwords do not match.')
+      return
+    }
+
     setIsLoading(true)
 
     try {

@@ -74,11 +74,7 @@ export default function BooksPage() {
       {!isLoading && !error && filteredBooks.length > 0 && (
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
           {filteredBooks.map((book) => (
-            <BookCard
-              key={book.id}
-              book={book}
-              onClick={() => navigate(`/books/${book.id}`)}
-            />
+            <BookCard key={book.id} book={book} />
           ))}
         </div>
       )}

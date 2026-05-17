@@ -7,7 +7,7 @@ export interface RegisterPayload {
   username: string
   email: string
   password: string
-  password2?: string
+  password2: string
 }
 
 export interface AuthTokens {

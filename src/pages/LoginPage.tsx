@@ -25,6 +25,7 @@ export default function LoginPage() {
     try {
       const tokens = await loginUser({ username, password })
       setToken(tokens.access)
+      localStorage.setItem('refresh', tokens.refresh)
       navigate('/books')
     } catch (err) {
       setError(getApiErrorMessage(err, 'Login failed. Please check your credentials.'))
