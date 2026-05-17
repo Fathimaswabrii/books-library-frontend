@@ -1,40 +1,20 @@
 import { useState, type FormEvent } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import axios from 'axios'
 import { registerUser } from '@/api/authApi'
+import { ErrorMessage } from '@/components/ErrorMessage'
+import { AuthPageLayout } from '@/components/layouts/AuthPageLayout'
 import { Button } from '@/components/ui/button'
+import { CardContent, CardFooter } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
-
-function getErrorMessage(error: unknown, fallback: string): string {
-  if (axios.isAxiosError(error) && error.response?.data) {
-    const data = error.response.data
-    if (typeof data === 'string') return data
-    if (typeof data === 'object' && data !== null) {
-      const messages = Object.values(data).flatMap((value) => {
-        if (Array.isArray(value)) return value.map(String)
-        if (typeof value === 'string') return [value]
-        return []
-      })
-      if (messages.length > 0) return messages.join(' ')
-    }
-  }
-  return fallback
-}
+import { getApiErrorMessage } from '@/lib/apiError'
 
 export default function RegisterPage() {
   const navigate = useNavigate()
   const [username, setUsername] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [password2, setPassword2] = useState('')
   const [error, setError] = useState('')
   const [isLoading, setIsLoading] = useState(false)
 
@@ -44,75 +24,76 @@ export default function RegisterPage() {
     setIsLoading(true)
 
     try {
-      await registerUser({ username, email, password })
+      await registerUser({ username, email, password, password2 })
       navigate('/login')
     } catch (err) {
-      setError(getErrorMessage(err, 'Registration failed. Please try again.'))
+      setError(getApiErrorMessage(err, 'Registration failed. Please try again.'))
     } finally {
       setIsLoading(false)
     }
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center p-4">
-      <Card className="w-full max-w-md">
-        <CardHeader>
-          <CardTitle>Register</CardTitle>
-          <CardDescription>Create an account to get started</CardDescription>
-        </CardHeader>
-        <form onSubmit={handleSubmit}>
-          <CardContent className="space-y-4">
-            {error && (
-              <p className="rounded-md bg-destructive/10 px-3 py-2 text-sm text-destructive">
-                {error}
-              </p>
-            )}
-            <div className="space-y-2">
-              <Label htmlFor="username">Username</Label>
-              <Input
-                id="username"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                required
-                autoComplete="username"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                autoComplete="email"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
-              <Input
-                id="password"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                autoComplete="new-password"
-              />
-            </div>
-          </CardContent>
-          <CardFooter className="flex flex-col gap-4">
-            <Button type="submit" className="w-full" disabled={isLoading}>
-              {isLoading ? 'Creating account...' : 'Create account'}
-            </Button>
-            <p className="text-center text-sm text-muted-foreground">
-              Already have an account?{' '}
-              <Link to="/login" className="text-primary underline-offset-4 hover:underline">
-                Login
-              </Link>
-            </p>
-          </CardFooter>
-        </form>
-      </Card>
-    </div>
+    <AuthPageLayout title="Register" description="Create an account to get started">
+      <form onSubmit={handleSubmit}>
+        <CardContent className="space-y-4">
+          {error && <ErrorMessage message={error} />}
+          <div className="space-y-2">
+            <Label htmlFor="username">Username</Label>
+            <Input
+              id="username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              required
+              autoComplete="username"
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="email">Email</Label>
+            <Input
+              id="email"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              autoComplete="email"
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="password">Password</Label>
+            <Input
+              id="password"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              autoComplete="new-password"
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="password2">Confirm Password</Label>
+            <Input
+              id="password2"
+              type="password"
+              value={password2}
+              onChange={(e) => setPassword2(e.target.value)}
+              required
+              autoComplete="new-password"
+            />
+          </div>
+        </CardContent>
+        <CardFooter className="flex flex-col gap-4">
+          <Button type="submit" className="w-full" disabled={isLoading}>
+            {isLoading ? 'Creating account...' : 'Create account'}
+          </Button>
+          <p className="text-center text-sm text-muted-foreground">
+            Already have an account?{' '}
+            <Link to="/login" className="text-primary underline-offset-4 hover:underline">
+              Login
+            </Link>
+          </p>
+        </CardFooter>
+      </form>
+    </AuthPageLayout>
   )
 }
