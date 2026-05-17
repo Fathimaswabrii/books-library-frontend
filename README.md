@@ -14,7 +14,7 @@ React + TypeScript frontend for managing a book library. Connects to a Django RE
 
 ## Prerequisites
 
-- Node.js 18+
+- Node.js
 
 ## Setup
 
