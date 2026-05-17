@@ -1,3 +1,4 @@
+import { AvailabilityBadge } from '@/components/AvailabilityBadge'
 import type { Book } from '@/types/book'
 
 interface BookCardProps {
@@ -14,15 +15,7 @@ export function BookCard({ book, onClick }: BookCardProps) {
     >
       <div className="flex items-start justify-between gap-2">
         <h2 className="text-lg font-semibold leading-tight text-foreground">{book.title}</h2>
-        <span
-          className={`shrink-0 rounded-full px-2 py-0.5 text-xs font-medium ${
-            book.availability_status
-              ? 'bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-300'
-              : 'bg-red-100 text-red-800 dark:bg-red-900/40 dark:text-red-300'
-          }`}
-        >
-          {book.availability_status ? 'Available' : 'Unavailable'}
-        </span>
+        <AvailabilityBadge available={book.availability_status} />
       </div>
       <p className="text-sm text-muted-foreground">by {book.author}</p>
       <div className="flex flex-wrap gap-2 text-sm text-muted-foreground">
